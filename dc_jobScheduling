@@ -1,0 +1,100 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct Task {
+	int prNo;
+	int arTime;
+	int exTime;
+	int wtTime;
+	int taTime;
+	int stTime;
+	int ftTime;
+	int prio;	
+};
+
+int main() {
+
+	int n,i,j,k,l,m;
+
+	int totWtTime=0, totTaTime=0;
+	float  avgWtTime=0, avgTaTime=0;
+
+	struct Task tasks[5];
+	struct Task temp;
+
+	printf("How many elements U Wanna Add?\n");
+	scanf("%d",&n);
+	
+	for(i=0;i<n;i++) {
+		printf("Enter 1.Process No. 2.Arrival Time 3.Execution Time 4.Priority\n");
+		scanf("%d%d%d%d",&tasks[i].prNo,&tasks[i].arTime,&tasks[i].exTime,&tasks[i].prio);	
+	}
+
+	for(j=0;j<n;j++) {
+		printf(" %d ",tasks[j].prNo);
+		printf(" %d ",tasks[j].arTime);
+		printf(" %d ",tasks[j].exTime);
+		printf(" %d ",tasks[j].prio);
+		printf("\n");	
+	}
+
+	printf("\n");
+
+	for(k=0;k<n;k++) {
+		for(l=0;l<n;l++) {
+			if(tasks[k].arTime<tasks[l].arTime) {
+				temp = tasks[k];
+				tasks[k] = tasks[l];
+				tasks[l] = temp;
+			}
+		}
+	}
+	
+	printf("Sorted W>R>T Priority\n");
+
+        for(j=0;j<n;j++) {
+                printf(" %d ",tasks[j].prNo);
+                printf(" %d ",tasks[j].arTime);
+                printf(" %d ",tasks[j].exTime);
+                printf(" %d ",tasks[j].prio);
+                printf("\n");
+        }
+
+	for(m=0;m<n;m++) {
+		if(m==0) {
+			tasks[m].stTime = tasks[m].arTime;
+			tasks[m].wtTime = tasks[m].stTime - tasks[m].arTime;
+			tasks[m].ftTime = tasks[m].stTime + tasks[m].exTime;
+			tasks[m].taTime = tasks[m].ftTime - tasks[m].arTime;		
+		} else {
+			tasks[m].stTime = tasks[m-1].ftTime;
+			tasks[m].wtTime = tasks[m].stTime - tasks[m].arTime;
+			tasks[m].ftTime = tasks[m].stTime + tasks[m].exTime;
+			tasks[m].taTime = tasks[m].ftTime - tasks[m].arTime;
+		}
+		totWtTime += tasks[m].wtTime;
+		totTaTime += tasks[m].taTime;	
+	}
+
+	avgWtTime = totWtTime/n;
+	avgTaTime = totTaTime/n;
+
+	
+        for(j=0;j<n;j++) {
+                printf(" Prpcess No.: %d ",tasks[j].prNo);
+                printf(" Arrival Time: %d ",tasks[j].arTime);
+                printf(" Execution Time: %d ",tasks[j].exTime);
+                printf(" Priority: %d ",tasks[j].prio);
+		printf(" Waiting Time: %d",tasks[j].wtTime);
+		printf(" TurnAround Time: %d", tasks[j].taTime);
+                printf("\n");
+        }
+
+	printf("\n\n");
+	
+	printf("Average Waiting Time is %.2f\n",avgWtTime);
+	printf("Average Turn Around Time os %.2f\n",avgTaTime);
+
+	return 0;
+}
